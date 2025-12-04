@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            table, th, td, div {
+                border: 1px solid black;
+            }
+
+            div, form {
+                margin-bottom: 10px;
+            }
+
+            div {
+                padding-bottom:10px;
+            }
+
+            p {
+                margin-bottom: 0px;
+            }
+
+            .a {
+                margin-bottom: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Webhooks discord</h1>
+        <div>
+            <form method="post" class="a">
+                {% csrf_token %}
+                <input type="hidden" value="SAIR" name="action">
+                Usuário: {{ user }} 
+                <button>Sair</button>
+            </form>
+        </div>
+        <div>
+            <h3>Webhooks cadastrados</h3>
+            <form method="post">
+                <p>Inserir novo Webhook</p>
+                {% csrf_token %}
+                <input type="hidden" value="CRIAR_WEBHOOK" name="action">
+                <input type="text" placeholder="Nome" name="nome">
+                <input type="password" placeholder="Url" name="url">
+                <button>Inserir</button>
+            </form>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th></th>
+                </tr>
+                {% for webhook in webhooks %}
+                <tr>
+                    <td>{{ webhook.id }}</td>
+                    <td>{{ webhook.nome }}</td>
+                    <th>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="APAGAR_WEBHOOK" name="action">
+                            <input type="hidden" value="{{ webhook.id }}" name="id">
+                            <button>Apagar</button>
+                        </form>
+                    </th>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
+            <h3>Enviar mensagem</h3>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" value="ENVIAR_MSG" name="action">
+                <input type="text" placeholder="ID Webhook" name="id">
+                <input type="text" placeholder="Mensagem" name="msg">
+                <button>Enviar</button>
+            </form>
+            <p>Histórico de mensagens</p>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Data Hora</th>
+                    <th>Webhook usado</th>
+                    <th>Responsável</th>
+                    <th>Mensagem</th>
+                </tr>
+                {% for mensagem in mensagens %}
+                <tr>
+                    <td>{{ mensagem.id }}</td>
+                    <td>{{ mensagem.data }}</td>
+                    <td>{{ mensagem.webhook }}</td>
+                    <td>{{ mensagem.user }}</td>
+                    <td>{{ mensagem.msg }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div>
+            <h3>Usuário cadastrados</h3>
+            <form method="post">
+                <p>Inserir novo usuário</p>
+                {% csrf_token %}
+                <input type="hidden" value="CRIAR_USUARIO" name="action">
+                <input type="text" placeholder="Nome" name="user">
+                <input type="password" placeholder="Senha" name="password">
+                <button>Inserir</button>
+            </form>
+            <table>
+                <tr>
+                    <th>Nome</th>
+                    <th></th>
+                </tr>
+                {% for usuario in usuarios %}
+                {% if usuario.id != 1 %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="APAGAR_USUARIO" name="action">
+                            <input type="hidden" value="{{ usuario.id }}" name="id">
+                            <button>Apagar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+    </body>
+</html>
