@@ -67,12 +67,6 @@ def index(request: HttpRequest):
                 user = User.objects.filter(id=user.id).first()
 
                 wh = webhook.first()
-                # print("WH:", wh)
-                # print("WH is not None:", wh is not None)
-                # print("User: ", user)
-                # print("Tipo de User: ", type(user))
-                # print("User is User: ", user is User)
-                # print("Msg id not none", msg is not None)
 
                 if wh is not None and msg is not None:
                     wh.enviar_mensagem(msg, user)
